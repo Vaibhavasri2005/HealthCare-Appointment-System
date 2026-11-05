@@ -6,7 +6,7 @@ import {
   register,
   savePatient,
 } from "./api";
-import "./App.css";
+import "./index.css";
 
 function getList(data) {
   if (Array.isArray(data)) return data;
@@ -272,12 +272,9 @@ export default function App() {
       <header className="topbar">
         <a className="brand" href="/">
           <span className="brand-mark">+</span>
-          <span>CarePoint</span>
+         <h1>CARE POINT</h1>
         </a>
 
-        <span className="topbar-note">
-          Healthcare Appointment System
-        </span>
       </header>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -393,7 +390,7 @@ export default function App() {
       </span>
       <div>
         <span className="selected-doctor-label">Selected doctor</span>
-        <strong>{doctorName(selectedDoctor)}</strong>
+        <strong>{doctorName (selectedDoctor)}</strong>
       </div>
     </div>
 
@@ -481,58 +478,62 @@ export default function App() {
 
 
       {step === "appointment-time" && (
-        <section className="panel">
-          <h1>Choose appointment date and time</h1>
+  <section className="panel appointment-panel">
+    <h1>Choose appointment date and time</h1>
 
-          <p>
-            Doctor: <strong>{doctorName(selectedDoctor)}</strong>
-          </p>
+    <p>
+      Doctor: <strong>{doctorName(selectedDoctor)}</strong>
+    </p>
 
-          <p>
-            Patient: <strong>{patient.name}</strong>
-          </p>
+    <p>
+      Patient: <strong>{patient.name}</strong>
+    </p>
 
-          <p>
-            Enter the local date and time you would prefer to visit.
-          </p>
+    <p>Enter the local date and time you would prefer to visit.</p>
 
-          <form onSubmit={handleBooking}>
-            <label htmlFor="appointmentTime">
-              Appointment date and time
-            </label>
+    <form onSubmit={handleBooking}>
+      <div className="appointment-field">
+        <label htmlFor="appointmentTime">
+          Appointment date and time
+        </label>
 
-            <input
-              id="appointmentTime"
-              name="appointmentTime"
-              type="datetime-local"
-              value={appointmentTime}
-              min={getLocalDateTime()}
-              onChange={(event) => setAppointmentTime(event.target.value)}
-              required
-            />
+        <input
+          id="appointmentTime"
+          name="appointmentTime"
+          type="datetime-local"
+          value={appointmentTime}
+          min={getLocalDateTime()}
+          onChange={(event) => setAppointmentTime(event.target.value)}
+          required
+        />
 
-            <p className="field-hint">
-              The date and time are entered in your computer's local time zone.
-            </p>
+        <p className="field-hint">
+          The date and time are entered in your computer&apos;s local time
+          zone.
+        </p>
+      </div>
 
-            <button
-              type="button"
-              className="button button-outline"
-              onClick={goToPatientDetails}
-            >
-              Back to patient details
-            </button>
+      <div className="appointment-actions">
+        <button
+          type="button"
+          className="button button-outline"
+          onClick={goToPatientDetails}
+        >
+          Back to patient details
+        </button>
 
-            <button
-              type="submit"
-              className="button button-primary"
-              disabled={loading}
-            >
-              {loading ? "Booking…" : "Confirm appointment"}
-            </button>
-          </form>
-        </section>
-      )}
+        <button
+          type="submit"
+          className="button button-primary"
+          disabled={loading}
+        >
+          {loading ? "Booking…" : "Confirm appointment"}
+        </button>
+      </div>
+    </form>
+  </section>
+)}
+
 
       {step === "confirmation" && (
         <section className="panel">
@@ -540,7 +541,7 @@ export default function App() {
 
           <p>Your appointment request was submitted successfully.</p>
           <p>Patient: {patient.name}</p>
-          <p>Doctor: {doctorName(selectedDoctor)}</p>
+          <p>Doctor: {doctorName (selectedDoctor)}</p>
 
           <p>
             Appointment date and time:{" "}
