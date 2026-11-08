@@ -1,282 +1,201 @@
-# 🚗 Car Rental Management Application
+# Healthcare Appointment System
 
-A full-stack Car Rental Management System developed using **React.js, Java Spring Boot Microservices, and MySQL**. The application provides a platform for users to browse available cars, select rental dates, calculate rental charges, and manage car bookings.
-
-The system focuses on secure user authentication, efficient booking management, and preventing conflicting bookings through database locking and temporary booking holds.
+A full-stack healthcare appointment booking application developed using **React.js, Java, Spring Boot, Microservices, and MySQL**. The system simplifies patient registration and doctor appointment scheduling by providing a digital platform for patients to browse doctors, check availability, and book appointments.
 
 ## 📌 Project Overview
 
-The Car Rental Management Application is designed to simplify the car rental process through a user-friendly web interface and a scalable microservices-based backend architecture.
+The Healthcare Appointment System replaces manual patient registration and appointment scheduling with an efficient, database-connected application.
 
-Users can register, log in, explore cars, check availability, select rental periods, and book vehicles. The backend manages booking requests, rental calculations, and database operations to ensure reliable and consistent booking information.
+Patients can register and log in securely, enter their personal details, select a medical specialization, view available doctors, choose appointment dates and time slots, and receive booking confirmation.
+
+The system uses a microservices architecture to ensure modularity, scalability, and efficient service communication.
+
+## 🎯 Problem Statement
+
+- Manual patient registration is time-consuming.
+- Appointment scheduling is inefficient.
+- Multiple patients may attempt to book the same appointment slot.
+- Doctor availability is difficult to manage manually.
+
+## 💡 Proposed Solution
+
+- Digital patient registration and profile management.
+- Specialization-based doctor selection.
+- Dynamic doctor availability and appointment scheduling.
+- Secure authentication using JWT.
+- Prevention of appointment overbooking.
+- Automated appointment capacity validation.
+- Real-time booking confirmation through the application.
 
 ## ✨ Key Features
 
-- User Registration and Login
-- JWT-Based Authentication
-- BCrypt Password Encryption
-- Car Listing and Car Details
-- Car Availability Checking
-- Rental Date Selection
-- Automatic Rental Duration Calculation
-- Rental Cost Estimation
-- Secure Car Booking
-- Unique Booking Reference Generation
-- My Bookings and Booking Status Tracking
-- Temporary Booking Holds
-- Automatic Hold Expiration
-- Pessimistic Write Locking for Concurrent Bookings
-- Centralized Exception Handling
-- Responsive React User Interface
-- REST API Integration
-- MySQL Database Persistence
+### Patient Management
+- User registration and login.
+- Secure password hashing using BCrypt.
+- JWT-based authentication.
+- Digital patient profile creation.
+- Patient details management.
+- Patient-specific appointment history.
 
-## 🛠️ Technology Stack
+### Doctor Management
+- Browse doctors by specialization.
+- View doctor name, ID, specialization, and availability.
+- Dynamic doctor availability retrieval.
+- Three medical specializations:
+  - General Medicine
+  - Ophthalmology
+  - ENT (Ear, Nose, and Throat)
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- React.js
-- React Router
-- Axios
-- React Hooks
-- Lucide React Icons
+### Appointment Management
+- Select an available doctor.
+- Choose an appointment date and time slot.
+- Morning and evening appointment scheduling.
+- Maximum of three confirmed appointments per doctor, date, and time slot.
+- Automatic slot capacity validation.
+- Prevention of simultaneous overbooking.
+- Appointment confirmation and status tracking.
+- HTTP 409 Conflict handling for fully booked slots.
 
-### Backend
-- Java 17
-- Spring Boot
-- Spring Cloud Gateway
-- Netflix Eureka Discovery Server
-- Spring Data JPA
-- Hibernate
-- Spring Security
-- JWT Authentication
-- BCrypt
-- REST APIs
-- Spring Transaction Management
-- Spring Scheduling
-- `@Transactional`
-- `@Scheduled`
-- `@ControllerAdvice`
-- Pessimistic Write Locking
+### Security and Reliability
+- JWT authentication.
+- BCrypt password encryption.
+- Protected REST API endpoints.
+- Transactional appointment booking.
+- Pessimistic locking for concurrency protection.
+- Centralized exception handling using `@ControllerAdvice`.
+- MySQL constraints for data integrity.
 
-### Database
-- MySQL
+## 🛠️ Tech Stack
 
-### Development and Testing Tools
-- IntelliJ IDEA
-- Visual Studio Code
-- Maven
-- Postman
-- Git
-- GitHub
-
-## 🏗️ System Architecture
-
-The application follows a microservices architecture.
-
-```mermaid
-flowchart TD
-    A[React Frontend] --> B[Spring Cloud API Gateway]
-    B --> C[Eureka Discovery Server]
-    B --> D[User Service]
-    B --> E[Car Service]
-    B --> F[Booking Service]
-    D --> G[(MySQL Database)]
-    E --> G
-    F --> G
-    F --> H[Booking Hold Scheduler]
-```
-
-### Microservices
-
-| Microservice | Responsibility |
+| Category | Technologies |
 |---|---|
-| Eureka Discovery Server | Registers and discovers backend services |
-| API Gateway | Routes frontend requests to the appropriate service |
-| User Service | User registration, login, and authentication |
-| Car Service | Car details, listing, and availability |
-| Booking Service | Booking creation, rental calculation, and booking management |
-| Booking Hold Scheduler | Automatically releases expired temporary booking holds |
+| Frontend | HTML5, CSS3, JavaScript, React.js |
+| Backend | Java, Spring Boot |
+| Architecture | Microservices |
+| Service Discovery | Netflix Eureka |
+| API Gateway | Spring Cloud Gateway |
+| ORM | Spring Data JPA, Hibernate |
+| Security | Spring Security, JWT, BCrypt |
+| Database | MySQL |
+| Transaction Management | Spring `@Transactional` |
+| Exception Handling | `@ControllerAdvice` |
+| API Testing | Postman |
+| Build Tool | Maven |
+| Version Control | Git, GitHub |
 
-## 🔄 Application Workflow
+## 🏗️ Microservices Architecture
 
-1. The user registers or logs into the application.
-2. The user browses the available cars.
-3. The user selects a car.
-4. The user enters the rental start date and end date.
-5. The system calculates the rental duration.
-6. The backend calculates the total rental amount using the daily rental rate.
-7. The Booking Service checks the car's availability.
-8. A temporary booking hold is created for an available car.
-9. The user confirms the booking before the hold expires.
-10. The backend saves the confirmed booking in MySQL.
-11. A unique booking reference is generated.
-12. The user receives a booking confirmation.
-13. The user can view booking details in the My Bookings section.
+The application consists of the following microservices:
 
-## 🔐 Booking Concurrency Management
+| Service | Responsibility |
+|---|---|
+| Eureka Discovery Service | Registers and discovers microservices |
+| API Gateway | Provides a single entry point and routes API requests |
+| Authentication Service | Handles user registration, login, and JWT authentication |
+| Patient Service | Manages patient profiles and personal details |
+| Doctor Service | Manages doctor information and availability |
+| Appointment Service | Handles appointment scheduling, validation, and booking |
 
-The application uses pessimistic write locking to prevent multiple users from booking the same car for overlapping rental dates.
+### Service Communication
 
-### Booking Conflict Prevention
-
-- Uses `PESSIMISTIC_WRITE` locking.
-- Uses `@Transactional` for database consistency.
-- Checks existing bookings and active temporary holds.
-- Validates rental date ranges.
-- Prevents overlapping bookings.
-- Returns HTTP 409 Conflict when a booking cannot be completed due to a conflict.
-
-### Temporary Booking Holds
-
-Temporary booking holds reserve a car for a limited duration while a user completes the booking process.
-
-- Hold information is stored in MySQL.
-- Each hold includes an expiration timestamp (`expires_at`).
-- The hold duration is configurable.
-- A scheduled task identifies expired holds.
-- Expired holds are released automatically.
-- Released holds no longer prevent other users from booking the car.
+- All backend microservices register with Netflix Eureka.
+- The frontend communicates with backend services through Spring Cloud Gateway.
+- REST APIs are used for communication between services.
+- MySQL stores user, patient, doctor, availability, and appointment information.
 
 ## 🗄️ Database Design
 
-The application uses MySQL for persistent data storage.
+The application uses MySQL with the following tables:
 
-### Users Table
-Stores user account information.
-
-- `user_id`
-- `email`
-- `password_hash`
-- `role`
-- `created_at`
-- `updated_at`
-
-### Cars Table
-Stores car details and rental information.
-
-- `car_id`
-- `model_name`
-- `brand`
-- `car_number`
-- `image_url`
-- `daily_rate`
-- `availability_status`
-- `description`
-
-### Bookings Table
-Stores confirmed and tracked rental bookings.
-
-- `booking_id`
-- `booking_reference`
-- `user_id`
-- `car_id`
-- `rental_start_date`
-- `rental_end_date`
-- `total_days`
-- `daily_rate`
-- `total_amount`
-- `booking_status`
-
-### Booking Holds Table
-Stores temporary reservations.
-
-- `hold_id`
-- `car_id`
-- `user_id`
-- `booking_reference`
-- `rental_start_date`
-- `rental_end_date`
-- `total_days`
-- `total_amount`
-- `expires_at`
-- `hold_status`
-- `created_at`
-
-## 💰 Rental Cost Calculation
-
-The total rental cost is calculated using the following formula:
-
-**Total Rental Amount = Daily Rental Rate × Total Rental Days**
-
-Example:
-
-| Description | Value |
+| Table | Description |
 |---|---|
-| Daily Rental Rate | ₹2,000 |
-| Rental Start Date | 20 October 2026 |
-| Rental End Date | 23 October 2026 |
-| Total Rental Days | 3 Days |
-| Total Rental Amount | ₹6,000 |
+| `users` | Stores user authentication details |
+| `patients` | Stores patient personal information |
+| `doctors` | Stores doctor information and specialization |
+| `doctor_availability` | Stores doctor-specific dates and time slots |
+| `appointments` | Stores confirmed appointment details |
 
-The backend calculates the authoritative rental amount using the daily rate stored in MySQL.
+### Appointment Scheduling
 
-## 📡 REST API Endpoints
-
-### Authentication APIs
-
-| Method | Endpoint | Description |
+| Slot | Time | Maximum Capacity |
 |---|---|---|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Authenticate a user |
+| Morning | 9:00 AM – 12:00 PM | 3 Patients |
+| Evening | 1:00 PM – 4:00 PM | 3 Patients |
 
-### Car APIs
+Each doctor can accept a maximum of three confirmed appointments for a particular date and time slot.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/cars` | Retrieve all cars |
-| GET | `/api/cars/{carId}` | Retrieve car details |
-| GET | `/api/cars/{carId}/availability` | Check car availability |
+The morning and evening slots are managed independently.
 
-### Booking APIs
+## 🔄 Application Workflow
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/bookings/estimate` | Calculate rental estimate |
-| POST | `/api/bookings/holds` | Create a temporary booking hold |
-| POST | `/api/bookings/{bookingReference}/confirm` | Confirm a booking |
-| GET | `/api/bookings/{bookingReference}` | Retrieve booking details |
-| GET | `/api/bookings/my` | Retrieve the authenticated user's bookings |
+1. Patient registers or logs in using email and password.
+2. The system authenticates the user and generates a JWT token.
+3. The patient enters their name, age, and phone number.
+4. The patient selects a medical specialization.
+5. The system retrieves the doctors belonging to that specialization.
+6. The patient selects an available doctor.
+7. The system displays available dates and appointment slots.
+8. The patient selects a date and time slot.
+9. The Appointment Service validates doctor availability and slot capacity.
+10. The booking is processed transactionally with concurrency protection.
+11. The appointment is saved in MySQL.
+12. The frontend displays the appointment confirmation and details.
 
-*Note: API paths should be updated to match the actual Gateway routes configured in the project.*
+## 🔐 Appointment Capacity Management
+
+Appointment capacity is a critical business requirement.
+
+The Appointment Service uses:
+
+- Spring `@Transactional` for transaction management.
+- Pessimistic database locking to prevent concurrent overbooking.
+- Spring Data JPA for database operations.
+- HTTP 409 Conflict responses when a slot is full.
+- Centralized exception handling for booking conflicts.
+
+The backend revalidates availability and capacity before confirming an appointment.
+
+This ensures that no more than three confirmed appointments are allowed for the same doctor, date, and time slot.
 
 ## 📂 Project Structure
 
 ```text
-Car-Rental-Management-Application/
+Healthcare-Appointment-System/
 │
 ├── api-gateway/
 │
 ├── eureka-server/
 │
-├── user-service/
+├── auth-service/
 │
-├── car-service/
+├── patient-service/
 │
-├── booking-service/
+├── doctor-service/
 │
-├── frontend/
+├── appointment-service/
+│
+├── healthcare-frontend/
 │
 ├── database/
 │   ├── schema.sql
-│   └── sample-data.sql
+│   └── data.sql
 │
-├── README.md
-└── .gitignore
+├── postman/
+│   └── Healthcare-Appointment-System.postman_collection.json
+│
+└── README.md
 ```
 
 ## ⚙️ Installation and Setup
 
 ### Prerequisites
 
-Install the following software:
+Install the following tools:
 
-- Java 17
-- Apache Maven
+- Java Development Kit (JDK)
 - Node.js and npm
 - MySQL Server
+- Maven
 - IntelliJ IDEA
 - Visual Studio Code
 - Postman
@@ -284,59 +203,45 @@ Install the following software:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Vaibhavasri2005/Car-Rental-Management-Application.git
+git clone <your-repository-url>
 ```
 
 Navigate to the project directory:
 
 ```bash
-cd Car-Rental-Management-Application
+cd Healthcare-Appointment-System
 ```
 
 ### 2. Configure MySQL
 
-Create the database:
+Create the required MySQL database and configure the database credentials in the `application.yml` or `application.properties` files of the respective services.
 
-```sql
-CREATE DATABASE car_rental_db;
-```
+Ensure that the database schema and initial doctor availability data are configured before starting the application.
 
-Configure the MySQL database connection in the application configuration files.
+### 3. Start the Eureka Discovery Service
 
-Example:
+Run the Eureka Discovery Service first.
 
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/car_rental_db
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
-```
+Verify that the Eureka dashboard is accessible through the configured server port.
 
-Use environment variables for database credentials.
+### 4. Start the Backend Microservices
 
-### 3. Start the Backend Microservices
+Start the following services:
 
-Start the services in the following order:
+1. Authentication Service
+2. Patient Service
+3. Doctor Service
+4. Appointment Service
+5. API Gateway
 
-1. Eureka Discovery Server
-2. API Gateway
-3. User Service
-4. Car Service
-5. Booking Service
+Ensure that all microservices register successfully with Eureka.
 
-Run each Spring Boot service using IntelliJ IDEA or Maven.
-
-```bash
-mvn spring-boot:run
-```
-
-Verify that the services are registered with Eureka.
-
-### 4. Start the React Frontend
+### 5. Start the React Frontend
 
 Navigate to the frontend directory:
 
 ```bash
-cd frontend
+cd healthcare-frontend
 ```
 
 Install the dependencies:
@@ -351,73 +256,77 @@ Start the development server:
 npm run dev
 ```
 
-Open the application using the local URL displayed in the terminal.
+Open the frontend URL displayed in the terminal.
 
-### 5. Test the Application
+### 6. Test the Application
 
-Use Postman to test the REST APIs.
+Use the following workflow:
 
-Test the following operations:
+- Register a new patient account.
+- Log in using valid credentials.
+- Enter patient details.
+- Select a medical specialization.
+- Browse available doctors.
+- Select an available date and time slot.
+- Confirm the appointment.
+- Verify the appointment details in MySQL.
 
-- User registration
-- User login
-- Retrieve car listings
-- Check car availability
-- Calculate rental cost
-- Create a booking hold
-- Confirm a booking
-- Retrieve booking details
-- Retrieve user bookings
-- Verify overlapping booking conflicts
-- Verify automatic hold expiration
+Use Postman to test the REST APIs and appointment capacity validation.
 
-## 🧪 Testing
+## 🧪 API Testing
 
-The application can be tested using Postman and automated tests.
+The application REST APIs can be tested using Postman.
 
-Important test scenarios:
+### Authentication
 
-- Valid and invalid user registration
-- Authentication and JWT validation
-- Car availability validation
-- Rental duration calculation
-- Rental cost calculation
-- Booking creation and confirmation
-- Duplicate and overlapping booking prevention
-- Concurrent booking requests
-- Temporary booking hold expiration
-- Unauthorized booking access
-- Centralized exception handling
+| Method | Endpoint |
+|---|---|
+| POST | `/api/auth/register` |
+| POST | `/api/auth/login` |
 
-## 🔒 Security
+### Patient Management
 
-The application incorporates the following security practices:
+| Method | Endpoint |
+|---|---|
+| GET | `/api/patients/me` |
+| POST | `/api/patients` |
+| PUT | `/api/patients/me` |
 
-- JWT-based authentication
-- BCrypt password hashing
-- Protected REST endpoints
-- User-specific booking access
-- Backend validation of rental information
-- Secure handling of database credentials
-- Centralized error handling
+### Doctor Management
+
+| Method | Endpoint |
+|---|---|
+| GET | `/api/doctors?specialization={specialization}` |
+| GET | `/api/doctors/{doctorId}` |
+| GET | `/api/doctors/{doctorId}/availability` |
+
+### Appointment Management
+
+| Method | Endpoint |
+|---|---|
+| GET | `/api/appointments/slots?doctorId={doctorId}&date={date}` |
+| POST | `/api/appointments` |
+| GET | `/api/appointments/me` |
+| GET | `/api/appointments/{appointmentId}` |
+
+All API requests are routed through the Spring Cloud Gateway.
 
 ## 🚀 Future Enhancements
 
-- Online Payment Gateway Integration
-- Email Booking Confirmation
-- Advanced Car Search and Filtering
-- Admin Dashboard
-- Customer Feedback and Ratings
-- Rental Invoice Generation
-- Deployment using Docker
-- Cloud Deployment
+- Email notifications for appointment confirmation.
+- Doctor administrative dashboard.
+- Appointment cancellation and rescheduling.
+- Medical prescription management.
+- Patient medical history.
+- Online payment integration.
+- Hospital administrator management.
 
-## 👩‍💻 Developer
+## 👩‍💻 Developed By
 
 **Vaibhava Sri L.**
 
-GitHub: [Vaibhavasri2005](https://github.com/Vaibhavasri2005)
+Final-Year B.E. Computer Science and Engineering Student
 
 ## 📄 License
 
-This project is developed for educational purposes and demonstrates full-stack web development using React, Java Spring Boot Microservices, and MySQL.
+This project is developed for educational and academic purposes.
